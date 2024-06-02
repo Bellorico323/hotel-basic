@@ -16,7 +16,7 @@ export function Home() {
           />
 
           <div className="absolute bottom-4 left-8">
-            <p className="text-zinc-100">Guests</p>
+            <p className="text-zinc-900 font-bold text-lg">Quartos</p>
           </div>
         </Link>
         <Link

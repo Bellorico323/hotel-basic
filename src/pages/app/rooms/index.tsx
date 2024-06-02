@@ -1,17 +1,23 @@
-import { EllipsisVertical, Search } from 'lucide-react'
+import { api } from '@/lib/axios'
 import { useEffect, useState } from 'react'
+import { RoomsTableRow } from './TableRow'
+import { Search } from 'lucide-react'
+import { AddRoomDialog } from './AddRoomDialog'
 
-interface Room {
+export interface Room {
   id: string
   number: number
   pricePerNight: number
   avaibility: string
 }
 
+interface RoomsResponse {
+  rooms: Room[]
+}
+
 async function fetchRooms() {
-  const response = await fetch('http://localhost:3333/rooms')
-  const data = await response.json()
-  return data.rooms
+  const response = await api.get<RoomsResponse>('/rooms')
+  return response.data
 }
 
 export function Room() {
@@ -20,13 +26,12 @@ export function Room() {
   useEffect(() => {
     async function getRooms() {
       const result = await fetchRooms()
-      setRooms(result)
+      setRooms(result.rooms)
     }
 
     getRooms()
   }, [])
 
-  console.log(rooms)
   return (
     <>
       <header className="pt-7 pb-4">
@@ -40,11 +45,9 @@ export function Room() {
         </div>
       </header>
       <main className="mt-2">
-        <h2 className="text-sm text-zinc-700">Rooms</h2>
+        <h2 className="text-sm text-zinc-700">Quartos</h2>
         <div className="flex p-5 justify-end pr-8">
-          <button className="text-zinc-100 bg-blue-500 py-2 px-4 rounded">
-            Add Room
-          </button>
+          <AddRoomDialog />
         </div>
         <div className="pr-8">
           <div className=" border border-zinc-200 rounded">
@@ -68,30 +71,7 @@ export function Room() {
               </thead>
               <tbody>
                 {rooms.map((room) => {
-                  return (
-                    <tr
-                      className="last:border-0 box-border border-b border-zinc-200"
-                      key={room.id}
-                    >
-                      <td className="text-start py-2 px-4 text-zinc-600">
-                        {room.id}
-                      </td>
-                      <td className="text-start py-2 px-4 text-zinc-600">
-                        {room.number}
-                      </td>
-                      <td className="text-start py-2 px-4 text-zinc-600">
-                        {room.pricePerNight}
-                      </td>
-                      <td className="text-start py-2 px-4 text-zinc-600">
-                        {room.avaibility}
-                      </td>
-                      <td className="text-center py-2 px-4 text-zinc-600">
-                        <button className="h-full w-full flex items-center justify-center">
-                          <EllipsisVertical className="h-5 w-5" />
-                        </button>
-                      </td>
-                    </tr>
-                  )
+                  return <RoomsTableRow key={room.id} room={room} />
                 })}
               </tbody>
             </table>
