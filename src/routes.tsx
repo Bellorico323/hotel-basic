@@ -6,12 +6,12 @@ import { Room } from './pages/app/rooms'
 export const router = createBrowserRouter([
   {
     path: '/',
+    element: <Home />,
+  },
+  {
+    path: '/',
     element: <AppLayout />,
     children: [
-      {
-        path: '/',
-        element: <Home />,
-      },
       {
         path: '/room',
         element: <Room />,
