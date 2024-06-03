@@ -25,7 +25,7 @@ export function AddGuestDialog() {
   })
 
   async function createGuest(data: CreateGuestInputs) {
-    createNewGuest(data)
+    await createNewGuest(data)
   }
 
   return (
