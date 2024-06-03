@@ -16,11 +16,11 @@ export function Home() {
           />
 
           <div className="absolute bottom-4 left-8">
-            <p className="text-zinc-900 font-bold text-lg">Quartos</p>
+            <p className="text-zinc-100">Quartos</p>
           </div>
         </Link>
         <Link
-          to={'/room'}
+          to={'/guest'}
           className="bg-zinc-100 rounded hover:scale-105 hover:duration-500 transition ease-in-out flex items-center justify-center"
         >
           <div className="p-3 bg-zinc-300 rounded-full">
