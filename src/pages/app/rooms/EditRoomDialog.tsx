@@ -1,9 +1,9 @@
 import { SelectInput } from '@/components/Select'
 import { SelectItem } from '@/components/Select/SelectItem'
-import { useRooms } from '@/contexts/RoomsContext'
+import { Room, useRooms } from '@/contexts/RoomsContext'
 import { zodResolver } from '@hookform/resolvers/zod'
 import * as Dialog from '@radix-ui/react-dialog'
-import { X } from 'lucide-react'
+import { Pencil, X } from 'lucide-react'
 import { Controller, useForm } from 'react-hook-form'
 import { z } from 'zod'
 
@@ -15,8 +15,12 @@ const CreateRoomSchema = z.object({
 
 type CreateRoomInputs = z.infer<typeof CreateRoomSchema>
 
-export function AddRoomDialog() {
-  const { createRoom: createNewRoom } = useRooms()
+interface RoomDialogProps {
+  room: Room
+}
+
+export function EditRoomDialog({ room }: RoomDialogProps) {
+  const { updateRoom } = useRooms()
 
   const {
     handleSubmit,
@@ -25,26 +29,35 @@ export function AddRoomDialog() {
     formState: { isSubmitting },
   } = useForm<CreateRoomInputs>({
     resolver: zodResolver(CreateRoomSchema),
+    defaultValues: {
+      avaibility: room.avaibility,
+    },
   })
 
-  async function createRoom(data: CreateRoomInputs) {
-    createNewRoom(data)
+  const roomId = room.id
+
+  async function editRoom(data: CreateRoomInputs) {
+    updateRoom({
+      id: roomId,
+      ...data,
+    })
   }
 
   return (
     <Dialog.Root>
       <Dialog.Trigger asChild>
-        <button className="text-zinc-100 bg-blue-500 py-2 px-4 rounded">
-          Add Room
+        <button className="flex items-center justify-center gap-2 text-amber-500 hover:bg-amber-100 w-full p-1 rounded-md hover:text-amber-700 group">
+          <Pencil className="h-4 w-4 text-amber-500 group-hover:text-amber-700" />
+          Editar
         </button>
       </Dialog.Trigger>
       <Dialog.Portal>
         <Dialog.Overlay className="bg-black/80 data-[state=open]:animate-overlayShow fixed inset-0" />
         <Dialog.Content className="data-[state=open]:animate-contentShow fixed top-[50%] left-[50%] max-h-[85vh] w-[90vw] max-w-[450px] translate-x-[-50%] translate-y-[-50%] rounded-[6px] bg-white p-[25px] shadow-[hsl(206_22%_7%_/_35%)_0px_10px_38px_-10px,_hsl(206_22%_7%_/_20%)_0px_10px_20px_-15px] focus:outline-none">
           <Dialog.Title className="text-zinc-800 m-0 text-lg font-medium">
-            Criar Quarto
+            Editar Quarto
           </Dialog.Title>
-          <form onSubmit={handleSubmit(createRoom)}>
+          <form onSubmit={handleSubmit(editRoom)}>
             <fieldset className="mb-6 flex items-center gap-5 mt-6">
               <label className=" w-[90px] text-center" htmlFor="name">
                 Número do quarto
@@ -54,6 +67,7 @@ export function AddRoomDialog() {
                   type="number"
                   className="bg-transparent w-full focus:outline-none text-zinc-600"
                   {...register('number')}
+                  defaultValue={room.number}
                 />
               </div>
             </fieldset>
@@ -66,6 +80,7 @@ export function AddRoomDialog() {
                   type="number"
                   className="bg-transparent w-full focus:outline-none text-zinc-600"
                   {...register('pricePerNight')}
+                  defaultValue={room.pricePerNight}
                 />
               </div>
             </fieldset>
@@ -99,7 +114,7 @@ export function AddRoomDialog() {
                 type="submit"
                 disabled={isSubmitting}
               >
-                Criar
+                Editar
               </button>
             </div>
           </form>

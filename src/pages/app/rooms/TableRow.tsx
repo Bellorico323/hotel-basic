@@ -1,6 +1,8 @@
-import { EllipsisVertical, Pencil, Trash2 } from 'lucide-react'
-import { Room } from '.'
+import { EllipsisVertical } from 'lucide-react'
 import * as Popover from '@radix-ui/react-popover'
+import { Room } from '@/contexts/RoomsContext'
+import { EditRoomDialog } from './EditRoomDialog'
+import { DeleteRoomDialog } from './DeleteRoomDialog'
 
 interface RoomsTableRowProps {
   room: Room
@@ -28,14 +30,8 @@ export function RoomsTableRow({ room }: RoomsTableRowProps) {
           <Popover.Portal>
             <Popover.Content className="rounded w-[166px] py-2 bg-white shadow-[0_10px_38px_-10px_hsla(206,22%,7%,.35),0_10px_20px_-15px_hsla(206,22%,7%,.2)] border border-zinc-200">
               <div className="flex flex-col items-center justify-center p-2">
-                <button className="flex items-center justify-center gap-2 text-amber-500 hover:bg-amber-100 w-full p-1 rounded-md hover:text-amber-700 group">
-                  <Pencil className="h-4 w-4 text-amber-500 group-hover:text-amber-700" />
-                  Editar
-                </button>
-                <button className="flex items-center justify-center gap-2 text-rose-500 w-full hover:bg-rose-100 p-1 rounded-md hover:text-rose-700 group">
-                  <Trash2 className="h-4 w-4 text-rose-500 group-hover:text-rose-700" />
-                  Deletar
-                </button>
+                <EditRoomDialog room={room} />
+                <DeleteRoomDialog id={room.id} />
               </div>
               <Popover.Arrow className="fill-zinc-300" />
             </Popover.Content>

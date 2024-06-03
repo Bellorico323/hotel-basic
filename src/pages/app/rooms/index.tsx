@@ -1,36 +1,10 @@
-import { api } from '@/lib/axios'
-import { useEffect, useState } from 'react'
 import { RoomsTableRow } from './TableRow'
 import { Search } from 'lucide-react'
 import { AddRoomDialog } from './AddRoomDialog'
-
-export interface Room {
-  id: string
-  number: number
-  pricePerNight: number
-  avaibility: string
-}
-
-interface RoomsResponse {
-  rooms: Room[]
-}
-
-async function fetchRooms() {
-  const response = await api.get<RoomsResponse>('/rooms')
-  return response.data
-}
+import { useRooms } from '@/contexts/RoomsContext'
 
 export function Room() {
-  const [rooms, setRooms] = useState<Room[]>([])
-
-  useEffect(() => {
-    async function getRooms() {
-      const result = await fetchRooms()
-      setRooms(result.rooms)
-    }
-
-    getRooms()
-  }, [])
+  const { rooms } = useRooms()
 
   return (
     <>
