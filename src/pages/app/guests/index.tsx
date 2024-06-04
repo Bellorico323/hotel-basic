@@ -2,7 +2,7 @@ import { GuestsTableRow } from './TableRow'
 import { Search } from 'lucide-react'
 import { AddGuestDialog } from './AddGuestDialog'
 import { useGuests } from '@/contexts/GuestsContext'
-import { GuestsSketonTableRow } from './SkeletonTableRow'
+import { GuestsSkeletonTableRow } from './SkeletonTableRow'
 
 export function Guests() {
   const { guests } = useGuests()
@@ -47,7 +47,7 @@ export function Guests() {
               <tbody>
                 {guests.length === 0
                   ? Array.from({ length: 10 }).map((_item, index) => (
-                      <GuestsSketonTableRow key={index} />
+                      <GuestsSkeletonTableRow key={index} />
                     ))
                   : guests.map((guest) => (
                       <GuestsTableRow key={guest.id} guest={guest} />

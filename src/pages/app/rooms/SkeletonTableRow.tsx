@@ -1,6 +1,6 @@
 import { EllipsisVertical } from 'lucide-react'
 
-export function GuestsSkeletonTableRow() {
+export function RoomsSkeletonTableRow() {
   return (
     <tr className="last:border-0 box-border border-b border-zinc-200">
       <td className="text-start py-2 px-4 text-zinc-600">

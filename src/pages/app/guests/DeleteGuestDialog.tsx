@@ -29,6 +29,12 @@ export function DeleteGuestDialog({ id }: GuestDialogProps) {
           <Dialog.Title className="text-zinc-800 m-0 text-lg font-medium">
             Deletar Hóspede
           </Dialog.Title>
+          <div className="mt-5">
+            <p>
+              Essa ação irá deletar esse hóspede permanentemente, você tem
+              certeza?
+            </p>
+          </div>
 
           <div className="mt-[25px] flex justify-end">
             <button
