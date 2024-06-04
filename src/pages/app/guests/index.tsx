@@ -2,11 +2,10 @@ import { GuestsTableRow } from './TableRow'
 import { Search } from 'lucide-react'
 import { AddGuestDialog } from './AddGuestDialog'
 import { useGuests } from '@/contexts/GuestsContext'
+import { GuestsSketonTableRow } from './SkeletonTableRow'
 
 export function Guests() {
   const { guests } = useGuests()
-
-  const guestsList = guests || []
 
   return (
     <>
@@ -46,17 +45,13 @@ export function Guests() {
                 </tr>
               </thead>
               <tbody>
-                {guestsList.length === 0 ? (
-                  <tr>
-                    <td colSpan={5} className="text-center py-4 text-zinc-500">
-                      No guests available
-                    </td>
-                  </tr>
-                ) : (
-                  guestsList.map((guest) => (
-                    <GuestsTableRow key={guest.id} guest={guest} />
-                  ))
-                )}
+                {guests.length === 0
+                  ? Array.from({ length: 10 }).map((_item, index) => (
+                      <GuestsSketonTableRow key={index} />
+                    ))
+                  : guests.map((guest) => (
+                      <GuestsTableRow key={guest.id} guest={guest} />
+                    ))}
               </tbody>
             </table>
           </div>

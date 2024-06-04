@@ -76,26 +76,21 @@ export function GuestsContextProvider({ children }: GuestsContextProps) {
 
     const updatedGuest = response.data.updatedGuest
 
-    const guestsInUpdate = [...guests]
-
-    const updatedGuestIndex = guestsInUpdate.findIndex(
-      (guest) => guest.id === updatedGuest.id,
+    setGuests((state) =>
+      state.map((guest) => {
+        if (guest.id === updatedGuest.id) {
+          return updatedGuest
+        } else {
+          return guest
+        }
+      }),
     )
-
-    guestsInUpdate.splice(updatedGuestIndex, 1, updatedGuest)
-
-    setGuests(guestsInUpdate)
   }
 
   async function deleteGuest(id: string) {
     await api.delete(`/guests/${id}`)
 
-    const guestsInDelete = [...guests]
-    const deletedGuest = guestsInDelete.findIndex((guest) => guest.id === id)
-
-    guestsInDelete.splice(deletedGuest, 1)
-
-    setGuests(guestsInDelete)
+    setGuests((state) => state.filter((guest) => guest.id !== id))
   }
 
   useEffect(() => {

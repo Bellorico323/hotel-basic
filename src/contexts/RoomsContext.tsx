@@ -76,26 +76,21 @@ export function RoomsContextProvider({ children }: RoomsContextProps) {
 
     const updatedRoom = response.data.updatedRoom
 
-    const roomsInUpdate = [...rooms]
-
-    const updatedRoomIndex = roomsInUpdate.findIndex(
-      (room) => room.id === updatedRoom.id,
+    setRooms((state) =>
+      state.map((room) => {
+        if (room.id === updatedRoom.id) {
+          return updatedRoom
+        } else {
+          return room
+        }
+      }),
     )
-
-    roomsInUpdate.splice(updatedRoomIndex, 1, updatedRoom)
-
-    setRooms(roomsInUpdate)
   }
 
   async function deleteRoom(id: string) {
     await api.delete(`/rooms/${id}`)
 
-    const roomsInDelete = [...rooms]
-    const deletedRoom = roomsInDelete.findIndex((room) => room.id === id)
-
-    roomsInDelete.splice(deletedRoom, 1)
-
-    setRooms(roomsInDelete)
+    setRooms((state) => state.filter((room) => room.id !== id))
   }
 
   useEffect(() => {
