@@ -1,17 +1,15 @@
-import { SelectInput } from '@/components/Select'
-import { SelectItem } from '@/components/Select/SelectItem'
 import { Room, useRooms } from '@/contexts/RoomsContext'
 import { zodResolver } from '@hookform/resolvers/zod'
 import * as Dialog from '@radix-ui/react-dialog'
 import { Pencil, X } from 'lucide-react'
 import { useState } from 'react'
-import { Controller, useForm } from 'react-hook-form'
+import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 
 const CreateRoomSchema = z.object({
   number: z.string().transform(Number),
   pricePerNight: z.string().transform(Number),
-  avaibility: z.string(),
+  avaibility: z.string().optional(),
 })
 
 type CreateRoomInputs = z.infer<typeof CreateRoomSchema>
@@ -28,7 +26,6 @@ export function EditRoomDialog({ room }: RoomDialogProps) {
   const {
     handleSubmit,
     register,
-    control,
     reset,
     formState: { isSubmitting },
   } = useForm<CreateRoomInputs>({
@@ -97,7 +94,7 @@ export function EditRoomDialog({ room }: RoomDialogProps) {
                 />
               </div>
             </fieldset>
-            <fieldset className="mb-6 flex items-center gap-6 mt-6">
+            {/* <fieldset className="mb-6 flex items-center gap-6 mt-6">
               <label className=" w-[90px] text-start" htmlFor="name">
                 Disponibilidade
               </label>
@@ -120,7 +117,7 @@ export function EditRoomDialog({ room }: RoomDialogProps) {
                   )
                 }}
               ></Controller>
-            </fieldset>
+            </fieldset> */}
             <div className="mt-[25px] flex justify-end">
               <button
                 className="text-zinc-100 bg-blue-500 py-2 px-4 rounded disabled:bg-blue-200"

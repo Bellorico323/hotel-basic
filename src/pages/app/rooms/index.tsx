@@ -2,6 +2,7 @@ import { RoomsTableRow } from './TableRow'
 import { Search } from 'lucide-react'
 import { AddRoomDialog } from './AddRoomDialog'
 import { useRooms } from '@/contexts/RoomsContext'
+import { GuestsSkeletonTableRow } from '../guests/SkeletonTableRow'
 
 export function Room() {
   const { rooms } = useRooms()
@@ -32,21 +33,25 @@ export function Room() {
                     Id
                   </th>
                   <th className="text-start py-2 px-4 text-zinc-500 font-semibold font-sm">
-                    Number
+                    Número do quarto
                   </th>
                   <th className="text-start py-2 px-4 text-zinc-500 font-semibold font-sm">
-                    Price per night
+                    Preço por noite
                   </th>
                   <th className="text-start py-2 px-4 text-zinc-500 font-semibold font-sm">
-                    Avaibility
+                    Disponibilidade
                   </th>
                   <th className="py-2 px-4"></th>
                 </tr>
               </thead>
               <tbody>
-                {rooms.map((room) => {
-                  return <RoomsTableRow key={room.id} room={room} />
-                })}
+                {rooms.length === 0
+                  ? Array.from({ length: 10 }).map((_item, index) => (
+                      <GuestsSkeletonTableRow key={index} />
+                    ))
+                  : rooms.map((room) => {
+                      return <RoomsTableRow key={room.id} room={room} />
+                    })}
               </tbody>
             </table>
           </div>

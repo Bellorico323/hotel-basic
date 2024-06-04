@@ -14,6 +14,13 @@ export interface Room {
   avaibility: string
 }
 
+export interface RoomWithOptionalAvaibility {
+  id: string
+  number: number
+  pricePerNight: number
+  avaibility?: string
+}
+
 interface RoomsResponse {
   rooms: Room[]
 }
@@ -40,7 +47,7 @@ interface RoomsContextType {
   rooms: Room[]
   setRoomsValues(rooms: Room[]): void
   createRoom(data: RoomWithoutId): void
-  updateRoom(data: Room): void
+  updateRoom(data: RoomWithOptionalAvaibility): void
   deleteRoom(id: string): void
 }
 
@@ -64,7 +71,7 @@ export function RoomsContextProvider({ children }: RoomsContextProps) {
     setRooms((state) => [room, ...state])
   }
 
-  async function updateRoom(data: Room) {
+  async function updateRoom(data: RoomWithOptionalAvaibility) {
     const response = await api.put<RoomWithoutId, UpdateRoomResponse>(
       `/rooms/${data.id}`,
       {

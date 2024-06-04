@@ -42,7 +42,7 @@ export function AddGuestDialog() {
           className="text-zinc-100 bg-blue-500 py-2 px-4 rounded"
           onClick={() => setModalState(true)}
         >
-          Add Guest
+          Adicionar Hóspede
         </button>
       </Dialog.Trigger>
       <Dialog.Portal>

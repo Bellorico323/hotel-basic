@@ -17,9 +17,14 @@ export function RoomsTableRow({ room }: RoomsTableRowProps) {
       <td className="text-start py-2 px-4 text-zinc-600">{room.id}</td>
       <td className="text-start py-2 px-4 text-zinc-600">{room.number}</td>
       <td className="text-start py-2 px-4 text-zinc-600">
-        {room.pricePerNight}
+        {room.pricePerNight.toLocaleString('pt-br', {
+          style: 'currency',
+          currency: 'BRL',
+        })}
       </td>
-      <td className="text-start py-2 px-4 text-zinc-600">{room.avaibility}</td>
+      <td className="text-start py-2 px-4 text-zinc-600">
+        {room.avaibility === 'available' ? 'Disponível' : 'Indisponível'}
+      </td>
       <td className="text-center py-2 px-4 text-zinc-600">
         <Popover.Root>
           <Popover.Trigger asChild>
