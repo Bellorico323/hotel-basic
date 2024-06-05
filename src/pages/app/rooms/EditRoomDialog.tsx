@@ -1,4 +1,5 @@
-import { Room, useRooms } from '@/contexts/RoomsContext'
+import { Room } from '@/@types/room'
+import { useRooms } from '@/contexts/RoomsContext'
 import { zodResolver } from '@hookform/resolvers/zod'
 import * as Dialog from '@radix-ui/react-dialog'
 import { Pencil, X } from 'lucide-react'
