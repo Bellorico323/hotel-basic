@@ -10,12 +10,15 @@ interface RoomDialogProps {
 export function DeleteRoomDialog({ id }: RoomDialogProps) {
   const [modalState, setModalState] = useState(false)
 
-  const { deleteRoom } = useRooms()
+  const { deleteRoom, openToast } = useRooms()
 
   const roomId = id
 
   async function handleDeleteRoom(id: string) {
-    deleteRoom(id)
+    const response = await deleteRoom(id)
+    if (response !== undefined) {
+      openToast()
+    }
 
     setModalState(false)
   }

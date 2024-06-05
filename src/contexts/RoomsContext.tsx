@@ -1,60 +1,34 @@
-import { api } from '@/lib/axios'
 import {
-  ReactNode,
-  createContext,
-  useContext,
-  useEffect,
-  useState,
-} from 'react'
-
-export interface Room {
-  id: string
-  number: number
-  pricePerNight: number
-  avaibility: string
-}
-
-export interface RoomWithOptionalAvaibility {
-  id: string
-  number: number
-  pricePerNight: number
-  avaibility?: string
-}
-
-interface RoomsResponse {
-  rooms: Room[]
-}
-
-interface CreateRoomResponse {
-  data: {
-    newRoom: Room
-  }
-}
-
-interface UpdateRoomResponse {
-  data: {
-    updatedRoom: Room
-  }
-}
-
-interface RoomsContextProps {
-  children: ReactNode
-}
-
-type RoomWithoutId = Omit<Room, 'id'>
-
-interface RoomsContextType {
-  rooms: Room[]
-  setRoomsValues(rooms: Room[]): void
-  createRoom(data: RoomWithoutId): void
-  updateRoom(data: RoomWithOptionalAvaibility): void
-  deleteRoom(id: string): void
-}
+  Room,
+  RoomWithOptionalAvaibility,
+  RoomsContextProps,
+  CreateRoomResponse,
+  UpdateRoomResponse,
+  RoomsResponse,
+  RoomWithoutId,
+  RoomsContextType,
+} from '@/@types/room'
+import { api } from '@/lib/axios'
+import axios from 'axios'
+import { createContext, useContext, useEffect, useState } from 'react'
 
 export const RoomsContext = createContext({} as RoomsContextType)
 
 export function RoomsContextProvider({ children }: RoomsContextProps) {
   const [rooms, setRooms] = useState<Room[]>([])
+  const [toastTrigger, setToastTrigger] = useState(false)
+
+  function openToast() {
+    setToastTrigger(true)
+
+    setTimeout(() => {
+      setToastTrigger(false)
+    }, 2000)
+  }
+
+  function closeToast() {
+    setToastTrigger(false)
+  }
 
   function setRoomsValues(rooms: Room[]) {
     setRooms(rooms)
@@ -95,9 +69,24 @@ export function RoomsContextProvider({ children }: RoomsContextProps) {
   }
 
   async function deleteRoom(id: string) {
-    await api.delete(`/rooms/${id}`)
+    try {
+      await api.delete(`/rooms/${id}`)
 
-    setRooms((state) => state.filter((room) => room.id !== id))
+      setRooms((state) => state.filter((room) => room.id !== id))
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response) {
+        const errorMessage = error.response.data.error
+
+        return new Error(errorMessage)
+      } else if (error instanceof Error) {
+        return error
+      }
+    }
+  }
+
+  async function fetchRooms() {
+    const { data } = await api.get<RoomsResponse>('/rooms')
+    setRoomsValues(data.rooms)
   }
 
   useEffect(() => {
@@ -111,7 +100,17 @@ export function RoomsContextProvider({ children }: RoomsContextProps) {
 
   return (
     <RoomsContext.Provider
-      value={{ rooms, setRoomsValues, createRoom, updateRoom, deleteRoom }}
+      value={{
+        rooms,
+        setRoomsValues,
+        createRoom,
+        updateRoom,
+        deleteRoom,
+        openToast,
+        closeToast,
+        toastTrigger,
+        fetchRooms,
+      }}
     >
       {children}
     </RoomsContext.Provider>

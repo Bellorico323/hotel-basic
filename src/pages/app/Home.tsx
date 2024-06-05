@@ -44,7 +44,7 @@ export function Home() {
           </div>
         </Link>
         <Link
-          to={'/room'}
+          to={'/reservations'}
           className="bg-zinc-100 rounded hover:scale-105 hover:duration-500 transition ease-in-out flex items-center justify-center relative overflow-hidden"
         >
           {checkinImage ? (

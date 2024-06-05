@@ -1,10 +1,11 @@
 import { EllipsisVertical } from 'lucide-react'
 import * as Popover from '@radix-ui/react-popover'
-import { Reservation } from '@/contexts/ReservationsContext'
 import { EditReservationDialog } from './EditReservationDialog'
 import { DeleteReservationDialog } from './DeleteReservationDialog'
 import { useRooms } from '@/contexts/RoomsContext'
 import { useGuests } from '@/contexts/GuestsContext'
+import { Reservation } from '@/@types/reservation'
+import { formatDate } from '@/utils/format-date'
 
 interface ReservationsTableRowProps {
   reservation: Reservation
@@ -28,10 +29,10 @@ export function ReservationsTableRow({
       <td className="text-start py-2 px-4 text-zinc-600">{room?.number}</td>
       <td className="text-start py-2 px-4 text-zinc-600">{guest?.name}</td>
       <td className="text-start py-2 px-4 text-zinc-600">
-        {reservation.checkIn}
+        {formatDate(reservation.checkIn)}
       </td>
       <td className="text-start py-2 px-4 text-zinc-600">
-        {reservation.checkOut}
+        {formatDate(reservation.checkOut)}
       </td>
       <td className="text-center py-2 px-4 text-zinc-600">
         <Popover.Root>

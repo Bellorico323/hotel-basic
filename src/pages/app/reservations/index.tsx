@@ -1,5 +1,4 @@
 import { ReservationsTableRow } from './TableRow'
-import { Search } from 'lucide-react'
 import { AddReservationDialog } from './AddReservationDialog'
 import { useReservations } from '@/contexts/ReservationsContext'
 import { ReservationsSkeletonTableRow } from './SkeletonTableRow'
@@ -9,18 +8,9 @@ export function Reservations() {
 
   return (
     <>
-      <header className="pt-7 pb-4">
-        <div className="flex gap-3 bg-zinc-100 w-[376px] p-2 rounded border border-zinc-200 group focus-within:ring-2 focus-within:ring-violet-500">
-          <Search className="text-zinc-600" />
-          <input
-            type="text"
-            className="bg-transparent w-full focus:outline-none text-zinc-600"
-            placeholder="Search for reservations"
-          />
-        </div>
-      </header>
+      <header className="pt-7 pb-4" />
       <main className="mt-2">
-        <h2 className="text-sm text-zinc-700">Reservas</h2>
+        <h2 className="text-2xl text-zinc-700">Reservas</h2>
         <div className="flex p-5 justify-end pr-8">
           <AddReservationDialog />
         </div>

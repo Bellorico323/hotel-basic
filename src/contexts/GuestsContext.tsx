@@ -1,53 +1,33 @@
-import { api } from '@/lib/axios'
 import {
-  ReactNode,
-  createContext,
-  useContext,
-  useEffect,
-  useState,
-} from 'react'
-
-export interface Guest {
-  id: string
-  name: string
-  email: string
-  phone: string
-}
-
-interface GuestsResponse {
-  guests: Guest[]
-}
-
-interface CreateGuestResponse {
-  data: {
-    newGuest: Guest
-  }
-}
-
-interface UpdateGuestResponse {
-  data: {
-    updatedGuest: Guest
-  }
-}
-
-interface GuestsContextProps {
-  children: ReactNode
-}
-
-type GuestWithoutId = Omit<Guest, 'id'>
-
-interface GuestsContextType {
-  guests: Guest[]
-  setGuestsValues(guests: Guest[]): void
-  createGuest(data: GuestWithoutId): void
-  updateGuest(data: Guest): void
-  deleteGuest(id: string): void
-}
+  GuestsContextType,
+  GuestsContextProps,
+  Guest,
+  GuestWithoutId,
+  CreateGuestResponse,
+  UpdateGuestResponse,
+  GuestsResponse,
+} from '@/@types/guest'
+import { api } from '@/lib/axios'
+import axios from 'axios'
+import { createContext, useContext, useEffect, useState } from 'react'
 
 export const GuestsContext = createContext({} as GuestsContextType)
 
 export function GuestsContextProvider({ children }: GuestsContextProps) {
   const [guests, setGuests] = useState<Guest[]>([])
+  const [toastTrigger, setToastTrigger] = useState(false)
+
+  function openToast() {
+    setToastTrigger(true)
+
+    setTimeout(() => {
+      setToastTrigger(false)
+    }, 2000)
+  }
+
+  function closeToast() {
+    setToastTrigger(false)
+  }
 
   function setGuestsValues(guests: Guest[]) {
     setGuests(guests)
@@ -88,9 +68,19 @@ export function GuestsContextProvider({ children }: GuestsContextProps) {
   }
 
   async function deleteGuest(id: string) {
-    await api.delete(`/guests/${id}`)
+    try {
+      await api.delete(`/guests/${id}`)
 
-    setGuests((state) => state.filter((guest) => guest.id !== id))
+      setGuests((state) => state.filter((guest) => guest.id !== id))
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response) {
+        const errorMessage = error.response.data.error
+
+        return new Error(errorMessage)
+      } else if (error instanceof Error) {
+        return error
+      }
+    }
   }
 
   useEffect(() => {
@@ -104,7 +94,16 @@ export function GuestsContextProvider({ children }: GuestsContextProps) {
 
   return (
     <GuestsContext.Provider
-      value={{ guests, setGuestsValues, createGuest, updateGuest, deleteGuest }}
+      value={{
+        guests,
+        setGuestsValues,
+        createGuest,
+        updateGuest,
+        deleteGuest,
+        openToast,
+        closeToast,
+        toastTrigger,
+      }}
     >
       {children}
     </GuestsContext.Provider>

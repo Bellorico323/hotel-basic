@@ -1,46 +1,14 @@
-import { api } from '@/lib/axios'
 import {
-  ReactNode,
-  createContext,
-  useContext,
-  useEffect,
-  useState,
-} from 'react'
-
-export interface Reservation {
-  id: string
-  roomId: string
-  guestId: string
-  checkIn: string
-  checkOut: string
-  createdAt: string
-}
-
-interface ReservationsResponse {
-  reservations: Reservation[]
-}
-
-interface CreateReservationResponse {
-  newReservation: Reservation
-}
-
-interface UpdateReservationResponse {
-  updatedReservation: Reservation
-}
-
-interface ReservationsContextProps {
-  children: ReactNode
-}
-
-type ReservationWithoutId = Omit<Reservation, 'id' | 'createdAt'>
-
-interface ReservationsContextType {
-  reservations: Reservation[]
-  setReservationsValues(reservations: Reservation[]): void
-  createReservation(data: ReservationWithoutId): Promise<void>
-  updateReservation(data: Reservation): Promise<void>
-  deleteReservation(id: string): Promise<void>
-}
+  ReservationsContextType,
+  ReservationsContextProps,
+  Reservation,
+  ReservationWithoutId,
+  CreateReservationResponse,
+  UpdateReservationResponse,
+  ReservationsResponse,
+} from '@/@types/reservation'
+import { api } from '@/lib/axios'
+import { createContext, useContext, useEffect, useState } from 'react'
 
 export const ReservationsContext = createContext({} as ReservationsContextType)
 

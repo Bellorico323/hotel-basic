@@ -22,8 +22,12 @@ type CreateReservationInputs = z.infer<typeof CreateReservationSchema>
 export function AddReservationDialog() {
   const [modalState, setModalState] = useState(false)
   const { createReservation: createNewReservation } = useReservations()
-  const { rooms } = useRooms()
+  const { rooms, fetchRooms } = useRooms()
   const { guests } = useGuests()
+
+  const roomsWithoutUnavailable = rooms.filter((room) => {
+    return room.avaibility !== 'unavailable'
+  })
 
   const {
     handleSubmit,
@@ -37,6 +41,7 @@ export function AddReservationDialog() {
 
   async function createReservation(data: CreateReservationInputs) {
     await createNewReservation(data)
+    await fetchRooms()
     setModalState(false)
     reset()
   }
@@ -68,9 +73,15 @@ export function AddReservationDialog() {
               <Controller
                 name="roomId"
                 control={control}
-                render={({ field }) => (
-                  <SelectInput placeholder="Selecione o quarto" {...field}>
-                    {rooms.map((room) => (
+                render={({ field: { name, onChange, value, disabled } }) => (
+                  <SelectInput
+                    placeholder="Selecione o quarto"
+                    name={name}
+                    onValueChange={onChange}
+                    value={value}
+                    disabled={disabled}
+                  >
+                    {roomsWithoutUnavailable.map((room) => (
                       <SelectItem
                         key={room.id}
                         value={room.id}
@@ -79,7 +90,7 @@ export function AddReservationDialog() {
                     ))}
                   </SelectInput>
                 )}
-              />
+              ></Controller>
             </fieldset>
             <fieldset className="mb-6 flex items-center gap-5 mt-6">
               <label className="w-[90px] text-center" htmlFor="guestId">
@@ -88,8 +99,14 @@ export function AddReservationDialog() {
               <Controller
                 name="guestId"
                 control={control}
-                render={({ field }) => (
-                  <SelectInput placeholder="Selecione o hóspede" {...field}>
+                render={({ field: { name, onChange, value, disabled } }) => (
+                  <SelectInput
+                    placeholder="Selecione o hóspede"
+                    name={name}
+                    onValueChange={onChange}
+                    value={value}
+                    disabled={disabled}
+                  >
                     {guests.map((guest) => (
                       <SelectItem
                         key={guest.id}
@@ -107,7 +124,7 @@ export function AddReservationDialog() {
               </label>
               <div className="flex gap-3 bg-zinc-100 w-full p-2 rounded border border-zinc-200 group focus-within:ring-2 focus-within:ring-blue-500 flex-1">
                 <input
-                  type="date"
+                  type="datetime-local"
                   className="bg-transparent w-full focus:outline-none text-zinc-600"
                   {...register('checkIn')}
                 />
@@ -119,7 +136,7 @@ export function AddReservationDialog() {
               </label>
               <div className="flex gap-3 bg-zinc-100 w-full p-2 rounded border border-zinc-200 group focus-within:ring-2 focus-within:ring-blue-500 flex-1">
                 <input
-                  type="date"
+                  type="datetime-local"
                   className="bg-transparent w-full focus:outline-none text-zinc-600"
                   {...register('checkOut')}
                 />

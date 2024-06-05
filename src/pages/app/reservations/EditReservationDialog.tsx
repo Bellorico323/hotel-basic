@@ -1,4 +1,4 @@
-import { Reservation, useReservations } from '@/contexts/ReservationsContext'
+import { useReservations } from '@/contexts/ReservationsContext'
 import { useRooms } from '@/contexts/RoomsContext'
 import { useGuests } from '@/contexts/GuestsContext'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -9,6 +9,8 @@ import { useForm, Controller } from 'react-hook-form'
 import { z } from 'zod'
 import { SelectInput } from '@/components/Select'
 import { SelectItem } from '@/components/Select/SelectItem'
+import { Reservation } from '@/@types/reservation'
+import { formatDateTimeLocal } from '@/utils/format-dateTime-local'
 
 const EditReservationSchema = z.object({
   roomId: z.string(),
@@ -26,8 +28,18 @@ interface ReservationDialogProps {
 export function EditReservationDialog({ reservation }: ReservationDialogProps) {
   const [modalState, setModalState] = useState(false)
   const { updateReservation } = useReservations()
-  const { rooms } = useRooms()
+  const { rooms, fetchRooms } = useRooms()
   const { guests } = useGuests()
+
+  const roomsWithoutUnavailable = rooms.filter((room) => {
+    if (room.avaibility === 'unavailable' && room.id === reservation.roomId) {
+      return true
+    } else if (room.avaibility === 'available') {
+      return true
+    } else {
+      return false
+    }
+  })
 
   const {
     handleSubmit,
@@ -39,8 +51,6 @@ export function EditReservationDialog({ reservation }: ReservationDialogProps) {
     defaultValues: {
       roomId: reservation.roomId,
       guestId: reservation.guestId,
-      checkIn: reservation.checkIn,
-      checkOut: reservation.checkOut,
     },
   })
 
@@ -52,6 +62,8 @@ export function EditReservationDialog({ reservation }: ReservationDialogProps) {
       ...data,
       createdAt: '',
     })
+
+    fetchRooms()
     setModalState(false)
   }
 
@@ -83,9 +95,15 @@ export function EditReservationDialog({ reservation }: ReservationDialogProps) {
               <Controller
                 name="roomId"
                 control={control}
-                render={({ field }) => (
-                  <SelectInput placeholder="Selecione o quarto" {...field}>
-                    {rooms.map((room) => (
+                render={({ field: { name, onChange, value, disabled } }) => (
+                  <SelectInput
+                    placeholder="Selecione o quarto"
+                    name={name}
+                    onValueChange={onChange}
+                    value={value}
+                    disabled={disabled}
+                  >
+                    {roomsWithoutUnavailable.map((room) => (
                       <SelectItem
                         key={room.id}
                         value={room.id}
@@ -103,8 +121,14 @@ export function EditReservationDialog({ reservation }: ReservationDialogProps) {
               <Controller
                 name="guestId"
                 control={control}
-                render={({ field }) => (
-                  <SelectInput placeholder="Selecione o hóspede" {...field}>
+                render={({ field: { name, onChange, value, disabled } }) => (
+                  <SelectInput
+                    placeholder="Selecione o hóspede"
+                    name={name}
+                    onValueChange={onChange}
+                    value={value}
+                    disabled={disabled}
+                  >
                     {guests.map((guest) => (
                       <SelectItem
                         key={guest.id}
@@ -122,9 +146,10 @@ export function EditReservationDialog({ reservation }: ReservationDialogProps) {
               </label>
               <div className="flex gap-3 bg-zinc-100 w-full p-2 rounded border border-zinc-200 group focus-within:ring-2 focus-within:ring-blue-500 flex-1">
                 <input
-                  type="date"
+                  type="datetime-local"
                   className="bg-transparent w-full focus:outline-none text-zinc-600"
                   {...register('checkIn')}
+                  defaultValue={formatDateTimeLocal(reservation.checkIn)}
                 />
               </div>
             </fieldset>
@@ -134,9 +159,10 @@ export function EditReservationDialog({ reservation }: ReservationDialogProps) {
               </label>
               <div className="flex gap-3 bg-zinc-100 w-full p-2 rounded border border-zinc-200 group focus-within:ring-2 focus-within:ring-blue-500 flex-1">
                 <input
-                  type="date"
+                  type="datetime-local"
                   className="bg-transparent w-full focus:outline-none text-zinc-600"
                   {...register('checkOut')}
+                  defaultValue={formatDateTimeLocal(reservation.checkOut)}
                 />
               </div>
             </fieldset>

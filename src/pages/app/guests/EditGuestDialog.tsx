@@ -1,4 +1,5 @@
-import { useGuests, Guest } from '@/contexts/GuestsContext'
+import { Guest } from '@/@types/guest'
+import { useGuests } from '@/contexts/GuestsContext'
 import { zodResolver } from '@hookform/resolvers/zod'
 import * as Dialog from '@radix-ui/react-dialog'
 import { Pencil, X } from 'lucide-react'
@@ -42,6 +43,7 @@ export function EditGuestDialog({ guest }: GuestDialogProps) {
       id: guestId,
       ...data,
     })
+
     setModalState(false)
   }
 

@@ -1,4 +1,5 @@
 import { useReservations } from '@/contexts/ReservationsContext'
+import { useRooms } from '@/contexts/RoomsContext'
 import * as Dialog from '@radix-ui/react-dialog'
 import { Trash2, X } from 'lucide-react'
 import { useState } from 'react'
@@ -9,6 +10,7 @@ interface ReservationDialogProps {
 
 export function DeleteReservationDialog({ id }: ReservationDialogProps) {
   const [modalState, setModalState] = useState(false)
+  const { fetchRooms } = useRooms()
 
   const { deleteReservation } = useReservations()
 
@@ -16,6 +18,7 @@ export function DeleteReservationDialog({ id }: ReservationDialogProps) {
 
   async function handleDeleteReservation(id: string) {
     await deleteReservation(id)
+    await fetchRooms()
     setModalState(false)
   }
 
