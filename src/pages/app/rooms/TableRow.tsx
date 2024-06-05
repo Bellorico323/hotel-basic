@@ -1,8 +1,8 @@
 import { EllipsisVertical } from 'lucide-react'
 import * as Popover from '@radix-ui/react-popover'
-import { Room } from '@/contexts/RoomsContext'
 import { EditRoomDialog } from './EditRoomDialog'
 import { DeleteRoomDialog } from './DeleteRoomDialog'
+import { Room } from '@/@types/room'
 
 interface RoomsTableRowProps {
   room: Room

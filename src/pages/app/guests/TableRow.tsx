@@ -1,8 +1,8 @@
 import { EllipsisVertical } from 'lucide-react'
 import * as Popover from '@radix-ui/react-popover'
-import { Guest } from '@/contexts/GuestsContext'
 import { EditGuestDialog } from './EditGuestDialog'
 import { DeleteGuestDialog } from './DeleteGuestDialog'
+import { Guest } from '@/@types/guest'
 
 interface GuestsTableRowProps {
   guest: Guest
